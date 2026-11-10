@@ -87,16 +87,16 @@ final class NetworkFrameworkTcpConnectionInterface: NSObject, MTTcpConnectionInt
         func connect(host: String, port: UInt16, timeout: Double) {
             // The override is opt-in to avoid redirecting ordinary Telegram
             // traffic to an incompatible server.
-            let host = YougramTeleSrvConfiguration.isEnabled ? YougramTeleSrvConfiguration.host : host
-            let port = YougramTeleSrvConfiguration.isEnabled ? YougramTeleSrvConfiguration.port : port
+            let endpointHost = YougramTeleSrvConfiguration.isEnabled ? YougramTeleSrvConfiguration.host : host
+            let endpointPort = YougramTeleSrvConfiguration.isEnabled ? YougramTeleSrvConfiguration.port : port
 
             if self.connection != nil {
                 assertionFailure("A connection already exists")
                 return
             }
             
-            let host = NWEndpoint.Host(host)
-            let port = NWEndpoint.Port(rawValue: port)!
+            let host = NWEndpoint.Host(endpointHost)
+            let port = NWEndpoint.Port(rawValue: endpointPort)!
             
             let tcpOptions = NWProtocolTCP.Options()
             tcpOptions.noDelay = true
