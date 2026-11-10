@@ -4,6 +4,20 @@ import Network
 import MtProtoKit
 import SwiftSignalKit
 
+// Experimental TeleSrv endpoint override. Disabled by default because a TCP
+// endpoint alone does not establish compatibility with Telegram's MTProto.
+// Enable only for a server confirmed to implement the expected MTProto transport.
+private enum YougramTeleSrvConfiguration {
+    static let host = "77.239.125.176"
+    static let port: UInt16 = 2398
+    static let enabledKey = "Yougram.TeleSrv.UseCustomEndpoint"
+
+    static var isEnabled: Bool {
+        UserDefaults.standard.bool(forKey: enabledKey)
+    }
+}
+
+
 @available(iOS 12.0, macOS 14.0, *)
 final class NetworkFrameworkTcpConnectionInterface: NSObject, MTTcpConnectionInterface {
     private struct ReadRequest {
@@ -71,6 +85,11 @@ final class NetworkFrameworkTcpConnectionInterface: NSObject, MTTcpConnectionInt
         }
         
         func connect(host: String, port: UInt16, timeout: Double) {
+            // The override is opt-in to avoid redirecting ordinary Telegram
+            // traffic to an incompatible server.
+            let host = YougramTeleSrvConfiguration.isEnabled ? YougramTeleSrvConfiguration.host : host
+            let port = YougramTeleSrvConfiguration.isEnabled ? YougramTeleSrvConfiguration.port : port
+
             if self.connection != nil {
                 assertionFailure("A connection already exists")
                 return
