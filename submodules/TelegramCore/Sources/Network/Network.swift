@@ -526,23 +526,21 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
                 }
             }
             
-            let seedAddressList: [Int: [String]]
-            
-            if testingEnvironment {
-                seedAddressList = [
-                    1: ["149.154.175.10"],
-                    2: ["149.154.167.40"],
-                    3: ["149.154.175.117"]
-                ]
-            } else {
-                seedAddressList = [
-                    1: ["149.154.175.50", "2001:b28:f23d:f001::a"],
-                    2: ["149.154.167.50", "95.161.76.100", "2001:67c:4e8:f002::a"],
-                    3: ["149.154.175.100", "2001:b28:f23d:f003::a"],
-                    4: ["149.154.167.91", "2001:67c:4e8:f004::a"],
-                    5: ["149.154.171.5", "2001:b28:f23f:f005::a"]
-                ]
-            }
+let seedAddressList: [Int: [String]]
+
+// Для кастомного сервера Yougram используем один и тот же внешний IP
+seedAddressList = [
+    1: ["77.239.125.176"],
+    2: ["77.239.125.176"],
+    3: ["77.239.125.176"],
+    4: ["77.239.125.176"],
+    5: ["77.239.125.176"]
+]
+
+for (id, ips) in seedAddressList {
+    // Внимание: изменен параметр port с 443 на ваш порт 2398
+    context.setSeedAddressSetForDatacenterWithId(id, seedAddressSet: MTDatacenterAddressSet(addressList: ips.map { MTDatacenterAddress(ip: $0, port: 2398, preferForMedia: false, restrictToTcp: false, cdn: false, preferForProxy: false, secret: nil) }))
+}
             
             for (id, ips) in seedAddressList {
                 context.setSeedAddressSetForDatacenterWithId(id, seedAddressSet: MTDatacenterAddressSet(addressList: ips.map { MTDatacenterAddress(ip: $0, port: 443, preferForMedia: false, restrictToTcp: false, cdn: false, preferForProxy: false, secret: nil) }))
