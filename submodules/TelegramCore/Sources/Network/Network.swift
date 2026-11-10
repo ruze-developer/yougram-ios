@@ -526,26 +526,26 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
                 }
             }
             
-let seedAddressList: [Int: [String]]
+            // Yougram TeleSrv: seed all Telegram datacenters with the custom endpoint.
+            // Keep the configured port; a second seed registration with 443 would
+            // overwrite this configuration and break the custom server connection.
+            let seedAddressList: [Int: [String]] = [
+                1: ["77.239.125.176"],
+                2: ["77.239.125.176"],
+                3: ["77.239.125.176"],
+                4: ["77.239.125.176"],
+                5: ["77.239.125.176"]
+            ]
 
-// Для кастомного сервера Yougram используем один и тот же внешний IP
-seedAddressList = [
-    1: ["77.239.125.176"],
-    2: ["77.239.125.176"],
-    3: ["77.239.125.176"],
-    4: ["77.239.125.176"],
-    5: ["77.239.125.176"]
-]
-
-for (id, ips) in seedAddressList {
-    // Внимание: изменен параметр port с 443 на ваш порт 2398
-    context.setSeedAddressSetForDatacenterWithId(id, seedAddressSet: MTDatacenterAddressSet(addressList: ips.map { MTDatacenterAddress(ip: $0, port: 2398, preferForMedia: false, restrictToTcp: false, cdn: false, preferForProxy: false, secret: nil) }))
-}
-            
             for (id, ips) in seedAddressList {
-                context.setSeedAddressSetForDatacenterWithId(id, seedAddressSet: MTDatacenterAddressSet(addressList: ips.map { MTDatacenterAddress(ip: $0, port: 443, preferForMedia: false, restrictToTcp: false, cdn: false, preferForProxy: false, secret: nil) }))
+                context.setSeedAddressSetForDatacenterWithId(
+                    id,
+                    seedAddressSet: MTDatacenterAddressSet(addressList: ips.map {
+                        MTDatacenterAddress(ip: $0, port: 2398, preferForMedia: false, restrictToTcp: true, cdn: false, preferForProxy: false, secret: nil)
+                    })
+                )
             }
-            
+
             context.keychain = keychain
             var wrappedAdditionalSource: MTSignal?
             #if os(iOS)
