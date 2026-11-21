@@ -530,7 +530,7 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             // the same server until the backend advertises additional DCs.
             // Keep this in sync with the OwpenGram server listener.
             let owpenGramHost = "77.239.125.176"
-            let owpenGramPort: Int32 = 2398
+            let owpenGramPort = 2398
             let seedAddressList: [Int: [String]] = Dictionary(
                 uniqueKeysWithValues: (1...5).map { ($0, [owpenGramHost]) }
             )
