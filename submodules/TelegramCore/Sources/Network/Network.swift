@@ -530,7 +530,6 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             // the same server until the backend advertises additional DCs.
             // Keep this in sync with the OwpenGram server listener.
             let owpenGramHost = "77.239.125.176"
-            let owpenGramPort = 2398
             let seedAddressList: [Int: [String]] = Dictionary(
                 uniqueKeysWithValues: (1...5).map { ($0, [owpenGramHost]) }
             )
@@ -539,7 +538,7 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
                 context.setSeedAddressSetForDatacenterWithId(
                     id,
                     seedAddressSet: MTDatacenterAddressSet(addressList: ips.map {
-                        MTDatacenterAddress(ip: $0, port: owpenGramPort, preferForMedia: false, restrictToTcp: true, cdn: false, preferForProxy: false, secret: nil)
+                        MTDatacenterAddress(ip: $0, port: 2398, preferForMedia: false, restrictToTcp: true, cdn: false, preferForProxy: false, secret: nil)
                     })
                 )
             }
