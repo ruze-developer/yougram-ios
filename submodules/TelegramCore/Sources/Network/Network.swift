@@ -526,22 +526,20 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
                 }
             }
             
-            // Yougram TeleSrv: seed all Telegram datacenters with the custom endpoint.
-            // Keep the configured port; a second seed registration with 443 would
-            // overwrite this configuration and break the custom server connection.
-            let seedAddressList: [Int: [String]] = [
-                1: ["77.239.125.176"],
-                2: ["77.239.125.176"],
-                3: ["77.239.125.176"],
-                4: ["77.239.125.176"],
-                5: ["77.239.125.176"]
-            ]
+            // OwpenGram self-hosted MTProto endpoint. All primary DC seeds use
+            // the same server until the backend advertises additional DCs.
+            // Keep this in sync with the OwpenGram server listener.
+            let owpenGramHost = "77.239.125.176"
+            let owpenGramPort: Int32 = 2398
+            let seedAddressList: [Int: [String]] = Dictionary(
+                uniqueKeysWithValues: (1...5).map { ($0, [owpenGramHost]) }
+            )
 
             for (id, ips) in seedAddressList {
                 context.setSeedAddressSetForDatacenterWithId(
                     id,
                     seedAddressSet: MTDatacenterAddressSet(addressList: ips.map {
-                        MTDatacenterAddress(ip: $0, port: 2398, preferForMedia: false, restrictToTcp: true, cdn: false, preferForProxy: false, secret: nil)
+                        MTDatacenterAddress(ip: $0, port: owpenGramPort, preferForMedia: false, restrictToTcp: true, cdn: false, preferForProxy: false, secret: nil)
                     })
                 )
             }
