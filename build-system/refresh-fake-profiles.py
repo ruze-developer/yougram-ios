@@ -17,7 +17,7 @@ with tempfile.TemporaryDirectory() as tmp:
     tmp = pathlib.Path(tmp)
     identity = tmp / "identity.pem"
     subprocess.run([
-        "openssl", "pkcs12", "-in", str(p12), "-out", str(identity),
+        "openssl", "pkcs12", "-legacy", "-in", str(p12), "-out", str(identity),
         "-nodes", "-passin", "pass:"
     ], check=True)
     for profile in sorted(profiles.glob("*.mobileprovision")):
