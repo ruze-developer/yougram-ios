@@ -529,7 +529,7 @@ func initializedNetwork(accountId: AccountRecordId, arguments: NetworkInitializa
             // OwpenGram self-hosted MTProto endpoint. All primary DC seeds use
             // the same server until the backend advertises additional DCs.
             // Keep this in sync with the OwpenGram server listener.
-            let owpenGramHost = "77.239.125.176"
+            let owpenGramHost = "48.102.206.129"
             let seedAddressList: [Int: [String]] = Dictionary(
                 uniqueKeysWithValues: (1...5).map { ($0, [owpenGramHost]) }
             )
