@@ -62,19 +62,17 @@ jobs:
             --configuration=release_arm64 \
             --buildNumber="$BUILD_NUMBER"
 
-          # collect ipa
+          # Bazel publishes output symlinks under bazel-bin, not bazel-out/applebin_*
           OUTPUT_PATH="build/artifacts"
           rm -rf "$OUTPUT_PATH"
           mkdir -p "$OUTPUT_PATH"
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/Telegram/Telegram.ipa; do
-            cp "$f" $OUTPUT_PATH/
-          done
+          IPA_PATH="bazel-bin/Telegram/Telegram.ipa"
+          test -f "$IPA_PATH"
+          cp "$IPA_PATH" "$OUTPUT_PATH/Telegram.ipa"
 
-          # collect dsym
+          # collect dSYMs without failing when an optional extension has none
           mkdir -p build/DSYMs
-          for f in bazel-out/applebin_ios-ios_arm*-opt-ST-*/bin/Telegram/*.dSYM; do
-            cp -R "$f" build/DSYMs/
-          done
+          find bazel-bin/Telegram -maxdepth 1 -name '*.dSYM' -exec cp -R {} build/DSYMs/ \;
           zip -r "./$OUTPUT_PATH/Telegram.DSYMs.zip" build/DSYMs 1>/dev/null
 
       - name: Create Release
